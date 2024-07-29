@@ -1,1 +1,2 @@
-spring.application.name=pnu_backend_mini_bootcamp
+server:
+  port: 8015
