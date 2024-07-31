@@ -3,6 +3,7 @@ package com.ll.pnu_backend_mini_bootcamp.question;
 import com.ll.pnu_backend_mini_bootcamp.answer.AnswerForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,9 +20,9 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String list(Model model){
-        List<Question> questions = this.questionService.getQuestionList();
-        model.addAttribute("questionList", questions);
+    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page){
+        Page<Question> questions = this.questionService.getQuestionList(page);
+        model.addAttribute("paging", questions);
         return "question_list";
     }
 
