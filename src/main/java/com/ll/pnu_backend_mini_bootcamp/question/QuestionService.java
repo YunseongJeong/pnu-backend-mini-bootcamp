@@ -1,6 +1,7 @@
 package com.ll.pnu_backend_mini_bootcamp.question;
 
 import com.ll.pnu_backend_mini_bootcamp.DataNotFoundException;
+import com.ll.pnu_backend_mini_bootcamp.User.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,11 +28,12 @@ public class QuestionService {
         throw new DataNotFoundException("question not found");
     }
 
-    public void create(String subject, String content){
+    public void create(String subject, String content, SiteUser author){
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+        question.setAuthor(author);
         questionRepository.save(question);
     }
 
@@ -41,5 +43,21 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
 
         return questionRepository.findAll(pageable);
+    }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+    }
+
+    public void delete(Question question){
+        this.questionRepository.delete(question);
+    }
+
+    public void vote(Question question, SiteUser siteUser){
+        question.getVoter().add(siteUser);
+        questionRepository.save(question);
     }
 }
